@@ -1,16 +1,28 @@
 let currentSound; // Yeh variable current playing sound ko track karega
 
 function playSound(sound) {
+    // Agar koi sound already play ho raha hai, toh pehle usse stop & remove kar do
     if (currentSound) {
-        currentSound.pause(); // Agar koi sound already play ho raha ho, toh usse stop kar do
+        currentSound.pause();
+        currentSound.currentTime = 0;
+        currentSound.remove(); // DOM se remove
     }
-    currentSound = new Audio(`sounds/${sound}.mp3`); // Audio file ka path
-    currentSound.play(); // Sound play karna
+
+    // Naya audio element create karna
+    currentSound = document.createElement("audio");
+    currentSound.src = `sounds/${sound}.mp3`;
+    currentSound.autoplay = true;
+    currentSound.setAttribute("id", "active-audio"); // Optional (Cypress me helpful)
+
+    // DOM me add karna (IMPORTANT)
+    document.body.appendChild(currentSound);
 }
 
 function stopSound() {
     if (currentSound) {
-        currentSound.pause(); // Sound ko stop karna
-        currentSound.currentTime = 0; // Sound ko reset karna
+        currentSound.pause();
+        currentSound.currentTime = 0;
+        currentSound.remove(); // DOM se remove bhi kar do
+        currentSound = null;
     }
 }
